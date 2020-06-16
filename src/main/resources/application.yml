@@ -1,2 +1,22 @@
 server:
   port: 8888
+  
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: jobUser
+    password: 
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  activemq:
+    in-memory: true
+    pool:
+      enabled: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        trace: false
+        web-allow-others: false
