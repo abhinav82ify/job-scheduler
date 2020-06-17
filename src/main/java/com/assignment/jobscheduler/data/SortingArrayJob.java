@@ -1,6 +1,7 @@
 package com.assignment.jobscheduler.data;
 
-import java.util.Date;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,8 +11,11 @@ import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,26 +42,28 @@ public class SortingArrayJob {
 	@Column(name = "status")
 	private String status;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonDeserialize(using= LocalDateTimeDeserializer.class)
+	@JsonSerialize(using= LocalDateTimeSerializer.class)
 	@Column(name = "created_time")
-	private Date createdTime;
+	private LocalDateTime createdTime;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonDeserialize(using= LocalDateTimeDeserializer.class)
+	@JsonSerialize(using= LocalDateTimeSerializer.class)
 	@Column(name = "updated_time")
-	private Date updatedTime;
+	private LocalDateTime updatedTime;
 
 	@Column(name = "duration_ms")
 	private Long durationMilliseconds;
 
 	@PrePersist
 	private void onCreate() {
-		updatedTime = createdTime = new Date();
+		updatedTime = createdTime = LocalDateTime.now();
 	}
 
 	@PreUpdate
 	private void onUpdate() {
-		updatedTime = new Date();
-		durationMilliseconds = updatedTime.getTime() - createdTime.getTime();
+		updatedTime = LocalDateTime.now();
+		durationMilliseconds = Duration.between(createdTime, updatedTime).toMillis();
 	}
 
 }

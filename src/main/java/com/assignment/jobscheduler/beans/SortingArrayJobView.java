@@ -1,6 +1,6 @@
 package com.assignment.jobscheduler.beans;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -21,7 +21,7 @@ public class SortingArrayJobView {
 	private Long jobId;
 	private Long[] data;
 	private String status;
-	private Date createdTime;
-	private Date updatedTime;
+	private LocalDateTime createdTime;
+	private LocalDateTime updatedTime;
 	private Long durationMilliseconds;
 }
