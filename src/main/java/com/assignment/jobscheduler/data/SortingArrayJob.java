@@ -19,45 +19,45 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="sorting_array")
+@Table(name = "sorting_array")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@NamedQuery(name="findAllJobs", query="select s from SortingArrayJob s")
+@NamedQuery(name = "findAllJobs", query = "select s from SortingArrayJob s")
 public class SortingArrayJob {
-	
+
 	@Id
 	@GeneratedValue
-	@Column(name="job_id")
+	@Column(name = "job_id")
 	private Long jobId;
-	
-	@Column(name="data", nullable=true)
-	private Integer[] data;
-	
-	@Column(name="status")
+
+	@Column(name = "data", nullable = true)
+	private Long[] data;
+
+	@Column(name = "status")
 	private String status;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_time")
-    private Date createdTime;
+	@Column(name = "created_time")
+	private Date createdTime;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_time")
-    private Date updatedTime;
-    
-    @Column(name="duration_ms")
-	private long durationMilliseconds;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "updated_time")
+	private Date updatedTime;
 
-    @PrePersist
-    protected void onCreate() {
-    	updatedTime = createdTime = new Date();
-    }
+	@Column(name = "duration_ms")
+	private Long durationMilliseconds;
 
-    @PreUpdate
-    protected void onUpdate() {
-    	updatedTime = new Date();
-    	durationMilliseconds = updatedTime.getTime()-createdTime.getTime();
-    }
-    
+	@PrePersist
+	private void onCreate() {
+		updatedTime = createdTime = new Date();
+	}
+
+	@PreUpdate
+	private void onUpdate() {
+		updatedTime = new Date();
+		durationMilliseconds = updatedTime.getTime() - createdTime.getTime();
+	}
+
 }

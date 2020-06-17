@@ -1,4 +1,4 @@
-package com.assignment.jobscheduler.data;
+package com.assignment.jobscheduler.beans;
 
 import java.util.Date;
 
@@ -19,9 +19,9 @@ import lombok.Setter;
 @JsonInclude(Include.NON_NULL)
 public class SortingArrayJobView {
 	private Long jobId;
-	private Integer[] data;
+	private Long[] data;
 	private String status;
-    private Date createdTime;
-    private Date updatedTime;
-	private long durationMilliseconds;
+	private Date createdTime;
+	private Date updatedTime;
+	private Long durationMilliseconds;
 }
