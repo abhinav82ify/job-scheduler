@@ -1,6 +1,7 @@
 package com.assignment.jobscheduler.receiver;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JobSchedulerMessageReciever {
 
 	@Autowired
+	@Qualifier("sortingArrayJobSchedulerServiceImpl")
 	private JobSchedulerService jobSchedulerService;
 
 	@JmsListener(destination = JobSchedulerConstants.SORTING_JOB_MQ_ENDPOINT)

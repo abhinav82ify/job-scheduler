@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SortingArrayJobRequestWrapper {
-
+public class SortingArrayJobRequest extends JobSchedulerRequest {
 	private Long[] data;
 }

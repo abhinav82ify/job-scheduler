@@ -27,7 +27,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 				.body(Collections.singletonMap("error", exception.getMessage()));
 	}
-	
+
 	@ExceptionHandler(value = { BadRequestException.class })
 	protected ResponseEntity<Object> handleBadRequestException(BadRequestException exception) {
 		log.error(exception.getMessage());

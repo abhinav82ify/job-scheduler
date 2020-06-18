@@ -2,16 +2,31 @@ package com.assignment.jobscheduler.service;
 
 import java.util.List;
 
-import com.assignment.jobscheduler.beans.SortingArrayJobRequestWrapper;
-import com.assignment.jobscheduler.data.SortingArrayJob;
+import com.assignment.jobscheduler.beans.JobSchedulerRequest;
+import com.assignment.jobscheduler.beans.JobSchedulerResponse;
+import com.assignment.jobscheduler.data.Job;
 
 public interface JobSchedulerService {
 
-	public Long createJob(SortingArrayJobRequestWrapper input);
+	/**
+	 * @param request
+	 * @return
+	 */
+	public Long createJob(JobSchedulerRequest request);
 
-	public void completeJobAndUpdate(SortingArrayJob job);
+	/**
+	 * @param job
+	 */
+	public void completeJobAndUpdate(Job job);
 
-	public List<SortingArrayJob> fetchAllJobs();
+	/**
+	 * @return
+	 */
+	public List<JobSchedulerResponse> fetchAllJobs();
 
-	public SortingArrayJob findJobDetails(Long jobId);
+	/**
+	 * @param jobId
+	 * @return
+	 */
+	public JobSchedulerResponse findJobDetails(Long jobId);
 }
