@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,7 +70,7 @@ public class SortingArrayJobSchedulerServiceImpl implements JobSchedulerService 
 			jmsTemplate.convertAndSend(JobSchedulerConstants.SORTING_JOB_MQ_ENDPOINT, savedJob);
 
 			log.info("Pushing job: " + savedJob.getJobId() + " to queue successful");
-		} catch (Exception e) {
+		} catch (JmsException e) {
 			log.info("Exception occured while writing job to queue: Deleting entry from database");
 			sortingArrayJobRepository.delete(savedJob);
 			throw new JobSchedulerException("An unexpected error has occured while creating the job.");
