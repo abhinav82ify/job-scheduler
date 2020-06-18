@@ -5,9 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
@@ -19,6 +16,7 @@ import com.assignment.jobscheduler.beans.SortingArrayJobRequest;
 import com.assignment.jobscheduler.beans.SortingArrayJobResponseTransformer;
 import com.assignment.jobscheduler.data.Job;
 import com.assignment.jobscheduler.data.SortingArrayJob;
+import com.assignment.jobscheduler.data.SortingArrayJobRepository;
 import com.assignment.jobscheduler.exception.BadRequestException;
 import com.assignment.jobscheduler.exception.InvalidJobException;
 import com.assignment.jobscheduler.exception.JobSchedulerException;
@@ -36,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SortingArrayJobSchedulerServiceImpl implements JobSchedulerService {
 
 	@Autowired
-	EntityManager em;
+	private SortingArrayJobRepository sortingArrayJobRepository;
 
 	@Autowired
 	JmsTemplate jmsTemplate;
@@ -61,7 +59,7 @@ public class SortingArrayJobSchedulerServiceImpl implements JobSchedulerService 
 
 		log.info("Input received: Persisting in database");
 
-		em.persist(job);
+		sortingArrayJobRepository.save(job);
 
 		log.info("Job saved in database with jobId: " + job.getJobId());
 
@@ -73,7 +71,7 @@ public class SortingArrayJobSchedulerServiceImpl implements JobSchedulerService 
 			log.info("Pushing job: " + job.getJobId() + " to queue successful");
 		} catch (Exception e) {
 			log.info("Exception occured while writing job to queue: Deleting entry from database");
-			em.remove(job);
+			sortingArrayJobRepository.delete(job);
 			throw new JobSchedulerException("An unexpected error has occured while creating the job.");
 		}
 
@@ -95,7 +93,7 @@ public class SortingArrayJobSchedulerServiceImpl implements JobSchedulerService 
 
 		log.info("Job: " + sortingArrayJob.getJobId() + " completed and updating the database with status and data");
 
-		em.merge(sortingArrayJob);
+		sortingArrayJobRepository.save(sortingArrayJob);
 	}
 
 	/**
@@ -106,8 +104,7 @@ public class SortingArrayJobSchedulerServiceImpl implements JobSchedulerService 
 	 */
 	@Override
 	public List<JobSchedulerResponse> fetchAllJobs() {
-		TypedQuery<SortingArrayJob> createNamedQuery = em.createNamedQuery("findAllJobs", SortingArrayJob.class);
-		List<SortingArrayJob> resultList = createNamedQuery.getResultList();
+		List<SortingArrayJob> resultList = sortingArrayJobRepository.findAll();
 
 		List<JobSchedulerResponse> response = resultList.stream().map(sortingArrayJobViewTransformer::jobStatus)
 				.collect(Collectors.toList());
@@ -125,7 +122,7 @@ public class SortingArrayJobSchedulerServiceImpl implements JobSchedulerService 
 	 */
 	@Override
 	public JobSchedulerResponse findJobDetails(Long jobId) {
-		Optional<SortingArrayJob> job = Optional.ofNullable(em.find(SortingArrayJob.class, jobId));
+		Optional<SortingArrayJob> job = sortingArrayJobRepository.findById(jobId);
 		if (!job.isPresent()) {
 			throw new InvalidJobException("No job found with jobId: " + jobId);
 		}
