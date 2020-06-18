@@ -59,23 +59,23 @@ public class SortingArrayJobSchedulerServiceImpl implements JobSchedulerService 
 
 		log.info("Input received: Persisting in database");
 
-		sortingArrayJobRepository.save(job);
+		SortingArrayJob savedJob = sortingArrayJobRepository.save(job);
 
-		log.info("Job saved in database with jobId: " + job.getJobId());
+		log.info("Job saved in database with jobId: " + savedJob.getJobId());
 
 		try {
-			log.info("Pushing job: " + job.getJobId() + " to queue");
+			log.info("Pushing job: " + savedJob.getJobId() + " to queue");
 
-			jmsTemplate.convertAndSend(JobSchedulerConstants.SORTING_JOB_MQ_ENDPOINT, job);
+			jmsTemplate.convertAndSend(JobSchedulerConstants.SORTING_JOB_MQ_ENDPOINT, savedJob);
 
-			log.info("Pushing job: " + job.getJobId() + " to queue successful");
+			log.info("Pushing job: " + savedJob.getJobId() + " to queue successful");
 		} catch (Exception e) {
 			log.info("Exception occured while writing job to queue: Deleting entry from database");
-			sortingArrayJobRepository.delete(job);
+			sortingArrayJobRepository.delete(savedJob);
 			throw new JobSchedulerException("An unexpected error has occured while creating the job.");
 		}
 
-		return job.getJobId();
+		return savedJob.getJobId();
 	}
 
 	/**
